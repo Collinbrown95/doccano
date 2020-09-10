@@ -4,7 +4,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import Me, Features, Users, Health
 from .views import ProjectList, ProjectDetail
-from .views import LabelList, LabelDetail, ApproveLabelsAPI, LabelUploadAPI
+from .views import LabelList, LabelDetail, ApproveLabelsAPI, CommentDocumentAPI, LabelUploadAPI
 from .views import DocumentList, DocumentDetail
 from .views import AnnotationList, AnnotationDetail
 from .views import TextUploadAPI, TextDownloadAPI, CloudUploadAPI
@@ -35,6 +35,8 @@ urlpatterns = [
          DocumentDetail.as_view(), name='doc_detail'),
     path('projects/<int:project_id>/docs/<int:doc_id>/approve-labels',
          ApproveLabelsAPI.as_view(), name='approve_labels'),
+    path('projects/<int:project_id>/docs/<int:doc_id>/comment-document',
+         CommentDocumentAPI.as_view(), name='comment_document'),
     path('projects/<int:project_id>/docs/<int:doc_id>/annotations',
          AnnotationList.as_view(), name='annotation_list'),
     path('projects/<int:project_id>/docs/<int:doc_id>/annotations/<int:annotation_id>',

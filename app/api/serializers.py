@@ -81,7 +81,8 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ('id', 'text', 'annotations', 'meta', 'annotation_approver')
+        fields = ('id', 'text', 'annotations', 'meta', 'annotation_approver', 'annotator_comment',
+                  'annotator_issue_id')
 
 
 class ApproverSerializer(DocumentSerializer):
@@ -90,6 +91,12 @@ class ApproverSerializer(DocumentSerializer):
         model = Document
         fields = ('id', 'annotation_approver')
 
+
+class CommentSerializer(DocumentSerializer):
+
+    class Meta:
+        model = Document
+        fields = ('id', 'annotator_comment', 'annotator_issue_id')
 
 class ProjectSerializer(serializers.ModelSerializer):
     current_users_role = serializers.SerializerMethodField()

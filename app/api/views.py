@@ -20,7 +20,7 @@ from rest_framework_csv.renderers import CSVRenderer
 from .filters import DocumentFilter
 from .models import Project, Label, Document, RoleMapping, Role
 from .permissions import IsProjectAdmin, IsAnnotatorAndReadOnly, IsAnnotator, IsAnnotationApproverAndReadOnly, IsOwnAnnotation, IsAnnotationApprover
-from .serializers import ProjectSerializer, LabelSerializer, DocumentSerializer, UserSerializer, ApproverSerializer
+from .serializers import ProjectSerializer, LabelSerializer, DocumentSerializer, UserSerializer, ApproverSerializer, CommentSerializer
 from .serializers import ProjectPolymorphicSerializer, RoleMappingSerializer, RoleSerializer
 from .utils import CSVParser, ExcelParser, JSONParser, PlainTextParser, CoNLLParser, AudioParser, iterable_to_io
 from .utils import JSONLRenderer
@@ -135,6 +135,16 @@ class ApproveLabelsAPI(APIView):
         document.save()
         return Response(ApproverSerializer(document).data)
 
+
+class CommentDocumentAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        document = get_object_or_404(Document, pk=self.kwargs['doc_id'])
+        document.annotator_comment = self.request.data.get('annotator_comment', None)
+        document.annotator_issue_id = self.request.data.get('annotator_issue_id', 0)
+        document.save()
+        return Response(CommentSerializer(document).data)
 
 class LabelList(generics.ListCreateAPIView):
     serializer_class = LabelSerializer
