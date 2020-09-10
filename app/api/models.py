@@ -221,6 +221,10 @@ class Document(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     annotations_approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    # Comment by an annotator if an issue is reported
+    annotator_comment = models.TextField(default='') 
+    # Integer ID for reported issues (e.g. error, missing data)
+    annotator_issue_id = models.IntegerField(default=0)
 
     def __str__(self):
         return self.text[:50]
