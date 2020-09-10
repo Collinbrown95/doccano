@@ -27,6 +27,9 @@ export const getters = {
       return false
     }
   },
+  annotator_comment(state) {
+    return state.items[state.current].annotator_comment
+  },
   currentDoc(state) {
     return state.items[state.current]
   }
@@ -194,6 +197,20 @@ export const actions = {
       approved: !getters.currentDoc.annotation_approver
     }
     DocumentService.approveDocument(payload.projectId, documentId, data)
+      .then((response) => {
+        commit('updateDocument', response.data)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  },
+  comment({ commit, getters }, payload) {
+    const documentId = getters.currentDoc.id
+    const data = {
+      annotator_comment: payload.message,
+      annotator_issue_id: payload.issue.id
+    }
+    DocumentService.commentDocument(payload.projectId, documentId, data)
       .then((response) => {
         commit('updateDocument', response.data)
       })
