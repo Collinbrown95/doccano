@@ -33,6 +33,11 @@
               :approved="approved"
               :disabled="currentDoc ? false : true"
             />
+            <comment-button
+              :commented="annotator_comment !== '' ? true : false"
+              :annotator_comment="annotator_comment"
+              :disabled="currentDoc ? false : true"
+            />
             <filter-button
               v-model="filterOption"
             />
@@ -75,6 +80,7 @@ import GuidelineButton from '@/components/containers/annotation/GuidelineButton'
 import MetadataBox from '@/components/organisms/annotation/MetadataBox'
 import FilterButton from '@/components/containers/annotation/FilterButton'
 import ApproveButton from '@/components/containers/annotation/ApproveButton'
+import CommentButton from '@/components/containers/annotation/CommentButton'
 import Pagination from '~/components/containers/annotation/Pagination'
 import TheHeader from '~/components/organisms/layout/TheHeader'
 import TheSideBar from '~/components/organisms/layout/TheSideBar'
@@ -90,6 +96,7 @@ export default {
     GuidelineButton,
     FilterButton,
     ApproveButton,
+    CommentButton,
     MetadataBox
   },
 
@@ -114,7 +121,7 @@ export default {
   computed: {
     ...mapGetters('projects', ['getLink', 'getCurrentUserRole', 'getFilterOption', 'canViewApproveButton']),
     ...mapState('documents', ['loading', 'total']),
-    ...mapGetters('documents', ['currentDoc', 'approved']),
+    ...mapGetters('documents', ['currentDoc', 'approved', 'annotator_comment']),
     page: {
       get() {
         return parseInt(this.$route.query.page, 10)
