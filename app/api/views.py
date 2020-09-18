@@ -21,7 +21,7 @@ from .filters import DocumentFilter
 from .models import Project, Label, Document, RoleMapping, Role
 from .permissions import IsProjectAdmin, IsAnnotatorAndReadOnly, IsAnnotator, IsAnnotationApproverAndReadOnly, IsOwnAnnotation, IsAnnotationApprover
 from .serializers import ProjectSerializer, LabelSerializer, DocumentSerializer, UserSerializer, ApproverSerializer
-from .serializers import ProjectPolymorphicSerializer, RoleMappingSerializer, RoleSerializer
+from .serializers import ProjectPolymorphicSerializer, RoleMappingSerializer, RoleSerializer, DocumentFeedbackSerializer
 from .utils import CSVParser, ExcelParser, JSONParser, PlainTextParser, CoNLLParser, AudioParser, iterable_to_io
 from .utils import JSONLRenderer
 from .utils import JSONPainter, CSVPainter
@@ -135,6 +135,16 @@ class ApproveLabelsAPI(APIView):
         document.save()
         return Response(ApproverSerializer(document).data)
 
+
+class DocumentFeedbackAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        document_feedback = DocumentFeedback(text=self.request.data.get('text', ''),
+                                             document_id=self.kwargs['doc_id'],
+                                             user_id=self.request.user.id)
+        document_feedback.save()
+        return Response(DocumentFeedbackSerializer(document_feedback).data)
 
 class LabelList(generics.ListCreateAPIView):
     serializer_class = LabelSerializer
