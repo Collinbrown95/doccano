@@ -94,6 +94,7 @@ export const actions = {
     // payload = Object.assign(payload, state.searchOptions)
     return DocumentService.getDocumentList(payload)
       .then((response) => {
+        console.log(response.data)
         commit('setDocumentList', response.data.results)
         commit('setTotalItems', response.data.count)
       })

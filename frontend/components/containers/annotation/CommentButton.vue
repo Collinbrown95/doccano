@@ -10,16 +10,12 @@
           v-on="on"
           @click="dialog=true"
         >
-          <v-icon v-if="commented">
-            mdi-flag
-          </v-icon>
-          <v-icon v-else>
+          <v-icon>
             mdi-flag-outline
           </v-icon>
         </v-btn>
       </template>
-      <span v-if="commented">Commented</span>
-      <span v-else>Not Commented</span>
+      <span>Feedback</span>
     </v-tooltip>
     <v-dialog
       v-model="dialog"
@@ -27,7 +23,6 @@
     >
       <comment-card
         v-if="currentProject"
-        :annotator_comment="annotator_comment"
         :guideline-text="currentProject.guideline"
         @close="dialog=false"
       />
@@ -43,14 +38,6 @@ export default {
     CommentCard
   },
   props: {
-    commented: {
-      type: Boolean,
-      default: null
-    },
-    annotator_comment: {
-      type: String,
-      default: ''
-    },
     disabled: {
       type: Boolean,
       default: false

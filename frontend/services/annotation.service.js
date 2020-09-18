@@ -10,6 +10,7 @@ class AnnotationService {
   }
 
   addAnnotation(projectId, docId, payload) {
+    console.log('annotation is ', payload)
     return this.request.post(`/projects/${projectId}/docs/${docId}/annotations`, payload)
   }
 

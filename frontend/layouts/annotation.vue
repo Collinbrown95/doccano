@@ -34,8 +34,6 @@
               :disabled="currentDoc ? false : true"
             />
             <comment-button
-              :commented="annotator_comment !== '' ? true : false"
-              :annotator_comment="annotator_comment"
               :disabled="currentDoc ? false : true"
             />
             <filter-button

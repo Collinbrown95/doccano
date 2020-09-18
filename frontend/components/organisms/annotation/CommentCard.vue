@@ -22,8 +22,8 @@
           />
         </v-radio-group>
         <v-textarea
-          v-model="annotator_comment"
-          :label="annotator_comment === '' ? 'Describe Issue' : annotator_comment"
+          v-model="annotatorComment"
+          :label="annotatorComment === '' ? 'Describe Issue' : annotatorComment"
           counter
           maxlength="1000"
         />
@@ -43,20 +43,15 @@ export default {
   components: {
     BaseCard
   },
-  props: {
-    annotator_comment: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
-      message: '',
       selectedIssue: {},
+      annotatorComment: '',
       documentIssues: [
-        { text: 'Document contains an error', id: 1 },
+        { text: 'Mistake found in the document contents', id: 1 },
         { text: 'Document contains null or missing information', id: 2 },
-        { text: 'Other error', id: 3 }
+        { text: 'Document contents are irrelevant', id: 3 },
+        { text: 'Other feedback', id: 4 }
       ]
     }
   },
@@ -66,10 +61,16 @@ export default {
       this.$emit('close')
     },
     submit() {
+      console.log('obj is ', {
+        projectId: this.$route.params.id,
+        comment: this.annotatorComment,
+        issue: this.selectedIssue,
+        username: localStorage.getItem('username')
+      })
       this.comment({
         projectId: this.$route.params.id,
         issue: this.selectedIssue,
-        message: this.message
+        username: localStorage.getItem('username')
       })
       this.$emit('close')
     }
