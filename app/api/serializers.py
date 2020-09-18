@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 
 from .models import Label, Project, Document, RoleMapping, Role
 from .models import TextClassificationProject, SequenceLabelingProject, Seq2seqProject, Speech2textProject
-from .models import DocumentAnnotation, SequenceAnnotation, Seq2seqAnnotation, Speech2textAnnotation
+from .models import DocumentAnnotation, DocumentFeedback, SequenceAnnotation, Seq2seqAnnotation, Speech2textAnnotation
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -90,6 +90,12 @@ class ApproverSerializer(DocumentSerializer):
         model = Document
         fields = ('id', 'annotation_approver')
 
+
+class DocumentFeedbackSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = DocumentFeedback
+        fields = ('id', 'text', 'document', 'user')
 
 class ProjectSerializer(serializers.ModelSerializer):
     current_users_role = serializers.SerializerMethodField()
