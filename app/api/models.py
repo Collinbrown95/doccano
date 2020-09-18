@@ -226,6 +226,12 @@ class Document(models.Model):
         return self.text[:50]
 
 
+class DocumentFeedback(models.Model):
+    text = models.TextField()
+    document = models.ForeignKey(Document, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+
 class Annotation(models.Model):
     objects = AnnotationManager()
 
