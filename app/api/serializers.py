@@ -95,7 +95,7 @@ class DocumentFeedbackSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = DocumentFeedback
-        fields = ('id', 'text', 'document', 'user')
+        fields = ('id', 'text', 'document', 'username')
 
 class ProjectSerializer(serializers.ModelSerializer):
     current_users_role = serializers.SerializerMethodField()

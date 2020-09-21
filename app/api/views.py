@@ -18,7 +18,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework_csv.renderers import CSVRenderer
 
 from .filters import DocumentFilter
-from .models import Project, Label, Document, RoleMapping, Role
+from .models import Project, Label, Document, RoleMapping, Role, DocumentFeedback
 from .permissions import IsProjectAdmin, IsAnnotatorAndReadOnly, IsAnnotator, IsAnnotationApproverAndReadOnly, IsOwnAnnotation, IsAnnotationApprover
 from .serializers import ProjectSerializer, LabelSerializer, DocumentSerializer, UserSerializer, ApproverSerializer
 from .serializers import ProjectPolymorphicSerializer, RoleMappingSerializer, RoleSerializer, DocumentFeedbackSerializer

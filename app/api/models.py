@@ -230,6 +230,9 @@ class DocumentFeedback(models.Model):
     text = models.TextField()
     document = models.ForeignKey(Document, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    @property
+    def username(self):
+        return self.user.username
 
 
 class Annotation(models.Model):
