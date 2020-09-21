@@ -213,7 +213,7 @@ class TestDocumentFeedback(TestCase):
                                                                      cls.project_admin])
         cls.document = mommy.make('Document', project=cls.project)
 
-    def test_multiple_feedbacks_write_successfully(self):
+    def test_multiple_feedbacks_write_by_object_reference_successfully(self):
         self.assertEqual(len(DocumentFeedback.objects.all()),
                          0,
                          f'Expected zero feedback entries but found {len(DocumentFeedback.objects.all())}.')
@@ -226,6 +226,23 @@ class TestDocumentFeedback(TestCase):
         project_admin_feedback = mommy.make('DocumentFeedback',
                                             document=self.document,
                                             user=self.project_admin)
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         3,
+                         f'Expected three feedback entries, but found {len(DocumentFeedback.objects.all())}.')
+
+    def test_multiple_feedbacks_write_by_id_successfully(self):
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         0,
+                         f'Expected zero feedback entries but found {len(DocumentFeedback.objects.all())}.')
+        annotator_feedback = mommy.make('DocumentFeedback',
+                                        document_id=self.document.id,
+                                        user_id=self.annotator.id)
+        approver_feedback = mommy.make('DocumentFeedback',
+                                       document_id=self.document.id,
+                                       user_id=self.approver.id)
+        project_admin_feedback = mommy.make('DocumentFeedback',
+                                            document_id=self.document.id,
+                                            user_id=self.project_admin.id)
         self.assertEqual(len(DocumentFeedback.objects.all()),
                          3,
                          f'Expected three feedback entries, but found {len(DocumentFeedback.objects.all())}.')

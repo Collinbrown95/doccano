@@ -15,5 +15,5 @@ cd src/app
 ```
 4. Run the tests
 ```bash
-python manage.py test api.tests server.tests
+python manage.py test api.tests
 ```
