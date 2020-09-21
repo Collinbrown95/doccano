@@ -36,7 +36,7 @@ urlpatterns = [
     path('projects/<int:project_id>/docs/<int:doc_id>/approve-labels',
          ApproveLabelsAPI.as_view(), name='approve_labels'),
     path('projects/<int:project_id>/docs/<int:doc_id>/document-feedback',
-         DocumentFeedbackAPI.as_view(), name='comment_document'),
+         DocumentFeedbackAPI.as_view(), name='document_feedback'),
     path('projects/<int:project_id>/docs/<int:doc_id>/annotations',
          AnnotationList.as_view(), name='annotation_list'),
     path('projects/<int:project_id>/docs/<int:doc_id>/annotations/<int:annotation_id>',

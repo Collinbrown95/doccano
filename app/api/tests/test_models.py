@@ -4,6 +4,7 @@ from django.db.utils import IntegrityError
 from model_mommy import mommy
 
 from ..models import Label, DocumentAnnotation, SequenceAnnotation, Seq2seqAnnotation, Speech2textAnnotation
+from ..models import Document, User, DocumentFeedback
 from ..serializers import DocumentAnnotationSerializer
 from ..serializers import SequenceAnnotationSerializer
 from ..serializers import Seq2seqAnnotationSerializer
@@ -187,3 +188,82 @@ class TestSeq2seqAnnotation(TestCase):
             Seq2seqAnnotation(document=a.document,
                               user=a.user,
                               text=a.text).save()
+
+
+class TestDocumentFeedback(TestCase):
+    '''
+    Testing that the DocumentFeedback model does CRUD operations as expected.
+    '''
+    @classmethod
+    def setUpTestData(cls):
+        cls.annotator_name = 'annotator_name'
+        cls.annotator_pass = 'annotator_pass'
+        cls.approver_name = 'approver_name_name'
+        cls.approver_pass = 'approver_pass'
+        cls.project_admin_name = 'project_admin_name'
+        cls.project_admin_pass = 'project_admin_pass'
+        cls.annotator = User.objects.create_user(username=cls.annotator_name,
+                                                 password=cls.annotator_pass)
+        cls.approver = User.objects.create_user(username=cls.approver_name,
+                                                password=cls.approver_pass)
+        cls.project_admin = User.objects.create_user(username=cls.project_admin_name,
+                                                     password=cls.project_admin_pass)
+        cls.project = mommy.make('TextClassificationProject', users=[cls.annotator,
+                                                                     cls.approver,
+                                                                     cls.project_admin])
+        cls.document = mommy.make('Document', project=cls.project)
+
+    def test_multiple_feedbacks_write_successfully(self):
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         0,
+                         f'Expected zero feedback entries but found {len(DocumentFeedback.objects.all())}.')
+        annotator_feedback = mommy.make('DocumentFeedback',
+                                        document=self.document,
+                                        user=self.annotator)
+        approver_feedback = mommy.make('DocumentFeedback',
+                                       document=self.document,
+                                       user=self.approver)
+        project_admin_feedback = mommy.make('DocumentFeedback',
+                                            document=self.document,
+                                            user=self.project_admin)
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         3,
+                         f'Expected three feedback entries, but found {len(DocumentFeedback.objects.all())}.')
+    
+    def test_read_feedback_successfully(self):
+        annotator_feedback = mommy.make('DocumentFeedback',
+                                        document=self.document,
+                                        user=self.annotator)
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         1,
+                         f'Expected one feedback entry but found {len(DocumentFeedback.objects.all())}.')
+        self.assertEqual(DocumentFeedback.objects.filter(user_id=self.annotator.id)[0].user,
+                         self.annotator,
+                         'Expected users to match, but they did not.')
+    
+    def test_update_feedback_successfully(self):
+        new_feedback = 'Updated text with a new edit'
+        annotator_feedback = mommy.make('DocumentFeedback',
+                                        document=self.document,
+                                        user=self.annotator)
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         1,
+                         f'Expected one feedback entry but found {len(DocumentFeedback.objects.all())}.')
+        annotator_feedback.text = new_feedback
+        annotator_feedback.save()
+        updated_feedback = DocumentFeedback.objects.filter(user=self.annotator)[0]
+        self.assertEqual(updated_feedback.text,
+                         new_feedback,
+                         'Expected feedback to have updated but it did not.')
+    
+    def test_delete_feedback_successfully(self):
+        annotator_feedback = mommy.make('DocumentFeedback',
+                                        document=self.document,
+                                        user=self.annotator)
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         1,
+                         f'Expected one feedback entry but found {len(DocumentFeedback.objects.all())}.')
+        DocumentFeedback.objects.filter(user=self.annotator).delete()
+        self.assertEqual(len(DocumentFeedback.objects.all()),
+                         0,
+                         f'Expected zero feedback entries but found {len(DocumentFeedback.objects.all())}.')
