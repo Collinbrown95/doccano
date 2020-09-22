@@ -254,7 +254,7 @@ class TestDocumentFeedback(TestCase):
         self.assertEqual(len(DocumentFeedback.objects.all()),
                          1,
                          f'Expected one feedback entry but found {len(DocumentFeedback.objects.all())}.')
-        self.assertEqual(DocumentFeedback.objects.filter(user_id=self.annotator.id)[0].user,
+        self.assertEqual(DocumentFeedback.objects.filter(user_id=self.annotator.id).first().user,
                          self.annotator,
                          'Expected users to match, but they did not.')
     
@@ -268,7 +268,7 @@ class TestDocumentFeedback(TestCase):
                          f'Expected one feedback entry but found {len(DocumentFeedback.objects.all())}.')
         annotator_feedback.text = new_feedback
         annotator_feedback.save()
-        updated_feedback = DocumentFeedback.objects.filter(user=self.annotator)[0]
+        updated_feedback = DocumentFeedback.objects.filter(user=self.annotator).first()
         self.assertEqual(updated_feedback.text,
                          new_feedback,
                          'Expected feedback to have updated but it did not.')
