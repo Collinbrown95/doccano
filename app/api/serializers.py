@@ -62,6 +62,7 @@ class LabelSerializer(serializers.ModelSerializer):
 class DocumentSerializer(serializers.ModelSerializer):
     annotations = serializers.SerializerMethodField()
     annotation_approver = serializers.SerializerMethodField()
+    document_feedback = serializers.SerializerMethodField()
 
     def get_annotations(self, instance):
         request = self.context.get('request')
@@ -78,10 +79,22 @@ class DocumentSerializer(serializers.ModelSerializer):
     def get_annotation_approver(cls, instance):
         approver = instance.annotations_approved_by
         return approver.username if approver else None
+    
+    def get_document_feedback(self, instance):
+        request = self.context.get('request')
+        if instance.documentfeedback_set.filter(user=request.user).first():
+            document_feedback = instance.documentfeedback_set.filter(user=request.user).first()
+            return {
+                'text': document_feedback.text,
+                'user': document_feedback.user.username,
+                'document': document_feedback.document.id
+            }
+        else:
+            return None
 
     class Meta:
         model = Document
-        fields = ('id', 'text', 'annotations', 'meta', 'annotation_approver')
+        fields = ('id', 'text', 'annotations', 'meta', 'annotation_approver', 'document_feedback')
 
 
 class ApproverSerializer(DocumentSerializer):

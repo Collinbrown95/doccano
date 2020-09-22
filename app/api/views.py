@@ -140,9 +140,15 @@ class DocumentFeedbackAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        document_feedback = DocumentFeedback(text=self.request.data.get('text', ''),
-                                             document_id=self.kwargs['doc_id'],
-                                             user_id=self.request.user.id)
+        # If the user has already submitted feedback, get their old feedback for that
+        # document and update it instead of creating a new record
+        if DocumentFeedback.objects.filter(user_id=self.request.user.id):
+            document_feedback = DocumentFeedback.objects.filter(user_id=self.request.user.id).first()
+            document_feedback.text = self.request.data.get('text', '')
+        else:
+            document_feedback = DocumentFeedback(text=self.request.data.get('text', ''),
+                                                 document_id=self.kwargs['doc_id'],
+                                                 user_id=self.request.user.id)
         document_feedback.save()
         return Response(DocumentFeedbackSerializer(document_feedback).data)
 
