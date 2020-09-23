@@ -131,7 +131,6 @@ class DocumentFeedbackAPI(APITestCase):
                                       'text': self.annotator_edited_feedback,
                                       'doc_id': self.document.id})
         temp = Document.objects.all().first()
-        print('temp is ', temp.id)
         self.assertDictEqual({
             'id': response.data['id'],
             'text': self.annotator_edited_feedback,
