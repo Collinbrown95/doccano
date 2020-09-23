@@ -29,7 +29,6 @@ export const getters = {
   },
   feedback(state) {
     if (state.items[state.current]) {
-      console.log('document feedback is ', state.items[state.current].document_feedback)
       return state.items[state.current].document_feedback
     } else {
       return null
@@ -59,6 +58,16 @@ export const mutations = {
   updateDocument(state, document) {
     const item = state.items.find(item => item.id === document.id)
     Object.assign(item, document)
+  },
+  updateFeedback(state, payload) {
+    const item = state.items.find(item => item.id === payload.document.id)
+    if (item.document_feedback === null) {
+      item.document_feedback = {
+        text: payload.newInput
+      }
+    } else {
+      item.document_feedback.text = payload.newInput
+    }
   },
   resetSelected(state) {
     state.selected = []
@@ -218,8 +227,16 @@ export const actions = {
     }
     DocumentService.submitFeedback(payload.projectId, documentId, data)
       .then((response) => {
-        console.log('resp is ', response.data)
-        commit('updateDocument', response.data)
+        console.log('response is ', response.data)
+        const data = {
+          id: response.data.document,
+          document_feedback: {
+            text: response.data.text,
+            user: response.data.username,
+            document: response.data.document
+          }
+        }
+        commit('updateDocument', data)
       })
       .catch((error) => {
         alert(error)
