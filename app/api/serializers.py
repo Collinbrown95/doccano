@@ -82,15 +82,26 @@ class DocumentSerializer(serializers.ModelSerializer):
     
     def get_document_feedback(self, instance):
         request = self.context.get('request')
-        if instance.documentfeedback_set.filter(user=request.user).first():
-            document_feedback = instance.documentfeedback_set.filter(user=request.user).first()
-            return {
-                'text': document_feedback.text,
-                'user': document_feedback.user.username,
-                'document': document_feedback.document.id
-            }
+        # If a user is making a request, get the feedback for that particular user
+        if request:
+            if instance.documentfeedback_set.filter(user=request.user).first():
+                document_feedback = instance.documentfeedback_set.filter(user=request.user).first()
+                return {
+                    'text': document_feedback.text,
+                    'user': document_feedback.user.username,
+                    'document': document_feedback.document.id
+                }
+            else:
+                return None
+        # Otherwise get ALL users' feedback for the document
         else:
-            return None
+            return [
+                {
+                    'text': document_feedback.text,
+                    'user': document_feedback.username,
+                    'document': document_feedback.document.id
+                }
+            for document_feedback in instance.documentfeedback_set.all()]
 
     class Meta:
         model = Document
