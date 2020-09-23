@@ -47,6 +47,10 @@ class DocumentService {
   approveDocument(projectId, docId, payload) {
     return this.request.post(`/projects/${projectId}/docs/${docId}/approve-labels`, payload)
   }
+
+  submitFeedback(projectId, docId, payload) {
+    return this.request.post(`/projects/${projectId}/docs/${docId}/document-feedback`, payload)
+  }
 }
 
 export default new DocumentService()

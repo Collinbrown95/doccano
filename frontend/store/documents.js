@@ -27,6 +27,14 @@ export const getters = {
       return false
     }
   },
+  feedback(state) {
+    if (state.items[state.current]) {
+      console.log('document feedback is ', state.items[state.current].document_feedback)
+      return state.items[state.current].document_feedback
+    } else {
+      return null
+    }
+  },
   currentDoc(state) {
     return state.items[state.current]
   }
@@ -91,6 +99,7 @@ export const actions = {
     // payload = Object.assign(payload, state.searchOptions)
     return DocumentService.getDocumentList(payload)
       .then((response) => {
+        console.log(response.data.results)
         commit('setDocumentList', response.data.results)
         commit('setTotalItems', response.data.count)
       })
@@ -195,6 +204,21 @@ export const actions = {
     }
     DocumentService.approveDocument(payload.projectId, documentId, data)
       .then((response) => {
+        commit('updateDocument', response.data)
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  },
+  submitFeedback({ commit, getters }, payload) {
+    const documentId = getters.currentDoc.id
+    const data = {
+      text: payload.text,
+      document: documentId
+    }
+    DocumentService.submitFeedback(payload.projectId, documentId, data)
+      .then((response) => {
+        console.log('resp is ', response.data)
         commit('updateDocument', response.data)
       })
       .catch((error) => {
