@@ -227,7 +227,6 @@ export const actions = {
     }
     DocumentService.submitFeedback(payload.projectId, documentId, data)
       .then((response) => {
-        console.log('response is ', response.data)
         const data = {
           id: response.data.document,
           document_feedback: {

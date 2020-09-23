@@ -18,8 +18,8 @@
           </v-icon>
         </v-btn>
       </template>
-    <span v-if="feedback !== null">Feedback Provided</span>
-    <span v-else>No Feedback Provided</span>
+      <span v-if="feedback !== null">Feedback Provided</span>
+      <span v-else>No Feedback Provided</span>
     </v-tooltip>
     <v-dialog
       v-model="dialog"
@@ -27,6 +27,7 @@
     >
       <comment-card
         v-if="currentProject"
+        :feedback="feedback"
         :guideline-text="currentProject.guideline"
         @close="dialog=false"
       />

@@ -10,8 +10,8 @@
       <h2>Enter Feedback Below</h2>
       <v-form>
         <v-textarea
+          v-model="userFeedback"
           :label="feedback !== null ? '' : 'Describe issue'"
-          v-model="feedback.text"
           maxlength="2000"
         />
       </v-form>
@@ -27,21 +27,34 @@ export default {
   components: {
     BaseCard
   },
-  data() {
-    return {
-      userFeedback: ''
+  props: {
+    feedback: {
+      type: Object,
+      default: null
     }
   },
   computed: {
-    ...mapGetters('documents', ['feedback'])
+    userFeedback: {
+      get() {
+        return this.feedback === null ? '' : this.feedback.text
+      },
+      set(newInput) {
+        const document = this.currentDoc()
+        const payload = {
+          newInput,
+          document
+        }
+        return this.$store.commit('documents/updateFeedback', payload)
+      }
+    }
   },
   methods: {
+    ...mapGetters('documents', ['currentDoc']),
     ...mapActions('documents', ['submitFeedback']),
     close() {
       this.$emit('close')
     },
     submit() {
-      console.log('this feedback text is ', this.feedback.text)
       this.submitFeedback({
         projectId: this.$route.params.id,
         text: this.userFeedback
