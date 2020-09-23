@@ -30,6 +30,16 @@
         />
       </v-card>
     </v-col>
+    <v-col
+      cols="12"
+      lg="4"
+    >
+      <v-card>
+        <doughnut-chart
+          :chart-data="feedback"
+        />
+      </v-card>
+    </v-col>
   </v-row>
 </template>
 
@@ -47,7 +57,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('statistics', ['userStats', 'labelStats', 'progress']),
+    ...mapGetters('statistics', ['userStats', 'labelStats', 'progress', 'feedback']),
     ...mapState('statistics', ['stats'])
   },
 

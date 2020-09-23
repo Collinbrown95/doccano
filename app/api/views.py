@@ -83,6 +83,11 @@ class StatisticsAPI(APIView):
         include = set(request.GET.getlist('include'))
         response = {}
 
+        if not include or 'num_docs' in include or 'num_feedback' in include:
+            num_docs, docs_with_feedback = self.feedback(project=p)
+            response['num_docs'] = num_docs
+            response['num_feedback'] = docs_with_feedback
+
         if not include or 'label' in include:
             label_count, user_count = self.label_per_data(p)
             response['label'] = label_count
@@ -119,6 +124,17 @@ class StatisticsAPI(APIView):
             .aggregate(Count('document', distinct=True))['document__count']
         remaining = total - done
         return {'total': total, 'remaining': remaining, 'user': user_data}
+
+
+    def feedback(self, project):
+        ''' Gets summary of user feedback on the project documents. '''
+        docs = project.documents.all()
+        num_docs = len(docs)
+        docs_with_feedback = 0  # Counts how many documents had feedback
+        for doc in docs:
+            if doc.documentfeedback_set.all():
+                docs_with_feedback += 1
+        return num_docs, docs_with_feedback
 
     def label_per_data(self, project):
         annotation_class = project.get_annotation_class()

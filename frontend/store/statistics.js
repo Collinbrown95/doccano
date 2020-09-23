@@ -43,6 +43,21 @@ export const getters = {
       ]
     }
   },
+  feedback(state) {
+    const withFeedback = state.stats.num_feedback
+    const withoutFeedback = state.stats.num_docs - state.stats.num_feedback
+    return {
+      datasets: [{
+        data: [withFeedback, withoutFeedback],
+        backgroundColor: ['#00d1b2', '#ffdd57']
+      }],
+
+      labels: [
+        'With Feedback',
+        'Without Feedback'
+      ]
+    }
+  },
   labelStats(state) {
     return makeData(state.stats.label, 'Label stats')
   },
