@@ -57,6 +57,7 @@ export default {
       items: [
         { icon: 'mdi-home', text: 'Home', link: '', adminOnly: false },
         { icon: 'mdi-database', text: 'Dataset', link: 'dataset', adminOnly: true },
+        { icon: 'mdi-table-edit', text: 'Review', link: 'review', adminOnly: true },
         { icon: 'label', text: 'Labels', link: 'labels', adminOnly: true },
         { icon: 'person', text: 'Members', link: 'members', adminOnly: true },
         { icon: 'mdi-book-open-outline', text: 'Guideline', link: 'guideline', adminOnly: true },
