@@ -1,7 +1,4 @@
-<template>
-  
-</template>
-
+<template />
 <script>
 export default {
 

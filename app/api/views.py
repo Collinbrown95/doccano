@@ -155,6 +155,10 @@ class ApproveLabelsAPI(APIView):
 class DocumentFeedbackAPI(APIView):
     permission_classes = [IsAuthenticated]
 
+    def get(self, request, *args, **kwargs):
+        print(self.kwargs['project_id'])
+        return Response({'text': 'success'})
+
     def post(self, request, *args, **kwargs):
         # If the user has already submitted feedback, get their old feedback for that
         # document and update it instead of creating a new record
