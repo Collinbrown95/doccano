@@ -1,10 +1,5 @@
 <template>
-  <v-card>
-    <v-card-title class="mb-2">
-      <h1>REVIEW CONTROLS HERE</h1>
-    </v-card-title>
-    <feedback-data-table />
-  </v-card>
+  <feedback-data-table />
 </template>
 
 <script>

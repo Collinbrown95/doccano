@@ -9,6 +9,10 @@ class DocumentService {
     return this.request.get(`/projects/${projectId}/docs?limit=${limit}&offset=${offset}&q=${q}&${filterName}=${isChecked}`)
   }
 
+  getDocumentFeedbackList({ projectId, limit = 10, offset = 0, q = '', isChecked = '', filterName = '' }) {
+    return this.request.get(`/projects/${projectId}/document-feedback?limit=${limit}&offset=${offset}&q=${q}&${filterName}=${isChecked}`)
+  }
+
   addDocument(projectId, payload) {
     return this.request.post(`/projects/${projectId}/docs`, payload)
   }
