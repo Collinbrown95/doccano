@@ -152,12 +152,30 @@ class ApproveLabelsAPI(APIView):
         return Response(ApproverSerializer(document).data)
 
 
-class DocumentFeedbackAPI(APIView):
+class DocumentFeedbackListAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        print(self.kwargs['project_id'])
-        return Response({'text': 'success'})
+        project = get_object_or_404(Project, pk=self.kwargs['project_id'])
+        docs = project.documents.all()
+        project_feedback = []
+        for doc in docs:
+            if doc.documentfeedback_set.all():
+                project_feedback.extend([
+                    {
+                        'text': feedback.text,
+                        'document': feedback.document.id,
+                        'document_text': feedback.document.text,
+                        'user': feedback.username
+                    }
+                for feedback in doc.documentfeedback_set.all()])
+        return Response({
+            'results': project_feedback,
+            'count': len(project_feedback)})
+
+
+class DocumentFeedbackAPI(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         # If the user has already submitted feedback, get their old feedback for that
@@ -173,6 +191,7 @@ class DocumentFeedbackAPI(APIView):
                                                  user_id=self.request.user.id)
         document_feedback.save()
         return Response(DocumentFeedbackSerializer(document_feedback).data)
+
 
 class LabelList(generics.ListCreateAPIView):
     serializer_class = LabelSerializer
