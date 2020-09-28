@@ -17,7 +17,10 @@
       :options.sync="options"
       :server-items-length="totalFeedback"
       :search="search"
-      :items-per-page="5"
+      :footer-props="{
+        'showFirstLastPage': true,
+        'items-per-page-options': [10, 50, 100]
+      }"
     >
       <template v-slot:item.document_text="{ item }">
         <span class="d-flex d-sm-none">{{ item.document_text | truncate(50) }}</span>
@@ -77,7 +80,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('documents', ['getDocumentFeedbackList', 'getDocumentList', 'updateDocument'])
+    ...mapActions('documents', ['getDocumentFeedbackList', 'getDocumentList', 'updateDocument']),
+    deleteFeedback(item) {
+      console.log('deleting!')
+    }
   }
 }
 </script>

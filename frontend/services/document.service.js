@@ -55,6 +55,10 @@ class DocumentService {
   submitFeedback(projectId, docId, payload) {
     return this.request.post(`/projects/${projectId}/docs/${docId}/document-feedback`, payload)
   }
+
+  deleteFeedback(projectId, docId, payload) {
+    return this.request.delete(`/projects/${projectId}/docs/${docId}/document-feedback`, payload)
+  }
 }
 
 export default new DocumentService()
