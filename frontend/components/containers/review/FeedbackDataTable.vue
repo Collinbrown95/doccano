@@ -14,6 +14,8 @@
     <v-data-table
       :headers="headers"
       :items="feedbackItems"
+      :options.sync="options"
+      :server-items-length="totalFeedback"
       :items-per-page="5"
     >
       <template v-slot:item.document_text="{ item }">
@@ -37,6 +39,7 @@ export default {
   data() {
     return {
       search: '',
+      options: {},
       headers: [
         { text: 'Username', value: 'user' },
         { text: 'User Feedback', value: 'text' },
@@ -46,6 +49,21 @@ export default {
   },
   computed: {
     ...mapState('documents', ['feedbackItems', 'totalFeedback'])
+  },
+  watch: {
+    '$route.query': '$fetch',
+    options: {
+      handler(newvalue, oldvalue) {
+        this.$router.push({
+          query: {
+            limit: this.options.itemsPerPage,
+            offset: (this.options.page - 1) * this.options.itemsPerPage,
+            q: this.search
+          }
+        })
+      },
+      deep: true
+    }
   },
   methods: {
     ...mapActions('documents', ['getDocumentFeedbackList', 'getDocumentList', 'updateDocument'])
