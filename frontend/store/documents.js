@@ -116,7 +116,6 @@ export const actions = {
     // payload = Object.assign(payload, state.searchOptions)
     return DocumentService.getDocumentList(payload)
       .then((response) => {
-        console.log(response.data.results)
         commit('setDocumentList', response.data.results)
         commit('setTotalItems', response.data.count)
       })
@@ -131,7 +130,6 @@ export const actions = {
     commit('setLoading', true)
     return DocumentService.getDocumentFeedbackList(payload)
       .then((response) => {
-        console.log('feedback list is ', response.data)
         commit('setDocumentFeedbackList', response.data.results)
         commit('setTotalFeedbackItems', response.data.count)
       })
@@ -181,7 +179,6 @@ export const actions = {
   updateDocument({ commit }, data) {
     DocumentService.updateDocument(data.projectId, data.id, data)
       .then((response) => {
-        console.log('response data is ', response.data)
         commit('updateDocument', response.data)
       })
       .catch((error) => {
