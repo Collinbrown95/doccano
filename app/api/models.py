@@ -233,6 +233,9 @@ class DocumentFeedback(models.Model):
     @property
     def username(self):
         return self.user.username
+    @property
+    def document_text(self):
+        return self.document.text
 
 
 class Annotation(models.Model):

@@ -116,10 +116,10 @@ class ApproverSerializer(DocumentSerializer):
 
 
 class DocumentFeedbackSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = DocumentFeedback
-        fields = ('id', 'text', 'document', 'username')
+        fields = ('id', 'text', 'document', 'username', 'document_text')
 
 class ProjectSerializer(serializers.ModelSerializer):
     current_users_role = serializers.SerializerMethodField()

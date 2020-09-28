@@ -16,6 +16,7 @@
       :items="feedbackItems"
       :options.sync="options"
       :server-items-length="totalFeedback"
+      :search="search"
       :items-per-page="5"
     >
       <template v-slot:item.document_text="{ item }">
@@ -41,7 +42,7 @@ export default {
       search: '',
       options: {},
       headers: [
-        { text: 'Username', value: 'user' },
+        { text: 'Username', value: 'username' },
         { text: 'User Feedback', value: 'text' },
         { text: 'Document', value: 'document_text' }
       ]
@@ -63,6 +64,16 @@ export default {
         })
       },
       deep: true
+    },
+    search() {
+      this.$router.push({
+        query: {
+          limit: this.options.itemsPerPage,
+          offset: 0,
+          q: this.search
+        }
+      })
+      this.options.page = 1
     }
   },
   methods: {

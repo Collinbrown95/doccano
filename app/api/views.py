@@ -152,26 +152,43 @@ class ApproveLabelsAPI(APIView):
         return Response(ApproverSerializer(document).data)
 
 
-class DocumentFeedbackListAPI(APIView):
+class DocumentFeedbackListAPI(generics.ListCreateAPIView):
+    serializer_class = DocumentFeedbackSerializer
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    search_fields = ('text', 'document__text')
+    ordering_fields = ('created_at', 'updated_at')
     permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
+    
+    def get_queryset(self):
         project = get_object_or_404(Project, pk=self.kwargs['project_id'])
         docs = project.documents.all()
-        project_feedback = []
+        # project_feedback = []
+        # for doc in docs:
+        #     if doc.documentfeedback_set.all():
+        #         project_feedback.extend([
+        #             {
+        #                 'text': feedback.text,
+        #                 'document': feedback.document.id,
+        #                 'document_text': feedback.document.text,
+        #                 'user': feedback.username
+        #             }
+        #         for feedback in doc.documentfeedback_set.all()])
+        # return project_feedback
+        # return Response({
+        #     'results': project_feedback,
+        #     'count': len(project_feedback)})
+        queryset = None
         for doc in docs:
             if doc.documentfeedback_set.all():
-                project_feedback.extend([
-                    {
-                        'text': feedback.text,
-                        'document': feedback.document.id,
-                        'document_text': feedback.document.text,
-                        'user': feedback.username
-                    }
-                for feedback in doc.documentfeedback_set.all()])
-        return Response({
-            'results': project_feedback,
-            'count': len(project_feedback)})
+                # queryset.extend(feedback for feedback in doc.documentfeedback_set.all())
+                if queryset:
+                    queryset = queryset | doc.documentfeedback_set.all()
+                else:
+                    queryset = doc.documentfeedback_set.all()
+        import sys
+        print('queryset is ', queryset)
+        sys.stdout.flush()
+        return queryset
 
 
 class DocumentFeedbackAPI(APIView):
